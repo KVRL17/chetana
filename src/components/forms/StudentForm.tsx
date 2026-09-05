@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { studentCounsellingSchema } from "@/schemas/studentCounsellingSchema";
 import type { StudentCounsellingFormValues } from "@/schemas/studentCounsellingSchema";
 import { cn } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, GraduationCap, MessageSquare } from "lucide-react";
@@ -37,6 +38,7 @@ export const StudentForm = ({ onSuccess }: StudentFormProps) => {
       addField("_subject", formSubjects.student);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Student Counselling Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -52,6 +54,13 @@ export const StudentForm = ({ onSuccess }: StudentFormProps) => {
       addField("Email Address", data.email || "");
       addField("Primary Concern", data.primaryConcern);
       addField("Message", data.message);
+
+      await saveFormSubmission({
+        formType: "student",
+        formName: "Student Counselling Form",
+        subject: formSubjects.student,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();

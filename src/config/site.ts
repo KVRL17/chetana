@@ -204,16 +204,16 @@ export type SiteConfig = typeof siteConfig;
 
 // Form email subjects
 export const formSubjects = {
-  appointment: "New Counselling Appointment - Chetana Website",
-  contact: "New General Enquiry - Chetana Website",
-  career: "New Career Counselling Enquiry - Chetana Website",
-  student: "New Student Counselling Enquiry - Chetana Website",
-  family: "New Family Counselling Enquiry - Chetana Website",
-  parent: "New Parent Guidance Enquiry - Chetana Website",
-  individual: "New Individual Counselling Enquiry - Chetana Website",
-  workshop: "New Workshop / Training Enquiry - Chetana Website",
-  institution: "New School / College Program Enquiry - Chetana Website",
-  callback: "New Callback Request - Chetana Website",
+  appointment: "[Appointment Form] New Counselling Appointment - Chetana Website",
+  contact: "[Contact Form] New General Enquiry - Chetana Website",
+  career: "[Career Counselling Form] New Career Counselling Enquiry - Chetana Website",
+  student: "[Student Counselling Form] New Student Counselling Enquiry - Chetana Website",
+  family: "[Family Counselling Form] New Family Counselling Enquiry - Chetana Website",
+  parent: "[Parent Guidance Form] New Parent Guidance Enquiry - Chetana Website",
+  individual: "[Individual Counselling Form] New Individual Counselling Enquiry - Chetana Website",
+  workshop: "[Workshop / Training Form] New Workshop / Training Enquiry - Chetana Website",
+  institution: "[Institution Form] New School / College Program Enquiry - Chetana Website",
+  callback: "[Callback Request Form] New Callback Request - Chetana Website",
 };
 
 // Privacy note for forms

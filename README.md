@@ -55,3 +55,41 @@ src/data/
 ## Mobile experience
 
 The responsive layer is intentionally designed rather than simply scaled down from desktop. Mobile includes a compact full-screen navigation experience, balanced hero composition, touch-friendly CTA sizing, 2×2 trust metrics, shorter service cards, a vertical counselling-process timeline, responsive training/resource cards, mobile-safe form inputs, compact breadcrumbs, a floating contact dock, and footer spacing for device safe areas. Desktop breakpoints retain the premium desktop presentation.
+
+## Admin panel and JSON form storage
+
+The website now stores a copy of every active form submission in a server-side JSON file while preserving the existing FormSubmit email flow.
+
+Admin URL:
+
+```text
+/admin
+```
+
+Configure admin access before deployment by copying `.env.example` values into your environment:
+
+```text
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=<strong-password>
+ADMIN_SESSION_SECRET=<long-random-secret>
+```
+
+By default, form records are stored in:
+
+```text
+data/form-submissions.json
+```
+
+The storage writer uses atomic replacement and maintains:
+
+```text
+data/form-submissions.backup.json
+```
+
+The admin panel supports search, form/status filtering, JSON export, editable submission fields, follow-up status and private admin notes. All edits are written back to the same JSON storage.
+
+### Important deployment requirement for JSON persistence
+
+JSON-file storage needs a persistent writable server filesystem. For production, deploy the Next.js app on a Node server/VPS/container with a persistent disk/volume, and optionally point `FORM_SUBMISSIONS_FILE` to that mounted path. A stateless/serverless runtime with ephemeral filesystem storage cannot guarantee that runtime file writes will survive restarts or redeployments.
+
+The browser also keeps a small local retry queue and uses a navigation-safe beacon fallback if the JSON API is temporarily unreachable. FormSubmit email submission remains independent so the existing email flow is not blocked by a temporary JSON write failure.

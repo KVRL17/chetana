@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { appointmentSchema } from "@/schemas/appointmentSchema";
 import type { AppointmentFormValues } from "@/schemas/appointmentSchema";
 import { cn, getTodayDate, getWhatsAppLink } from "@/lib/utils";
-import { siteConfig, successMessages, errorMessages } from "@/config/site";
+import { saveFormSubmission } from "@/lib/form-storage-client";
+import { siteConfig, formSubjects, successMessages, errorMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, Calendar, Phone, Mail, User, MessageSquare } from "lucide-react";
 
@@ -58,9 +59,10 @@ export const AppointmentForm = ({ onSuccess, initialService = "individual-counse
         form.appendChild(input);
       };
 
-      addField("_subject", "New Counselling Appointment - Chetana Website");
+      addField("_subject", formSubjects.appointment);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Appointment Form");
 
       // Add honeypot
       const hpInput = document.createElement("input");
@@ -82,6 +84,13 @@ export const AppointmentForm = ({ onSuccess, initialService = "individual-counse
       addField("Preferred Time", data.preferredTime || "");
       addField("City / Location", data.cityLocation || "");
       addField("Brief Message", data.briefMessage);
+
+      await saveFormSubmission({
+        formType: "appointment",
+        formName: "Appointment Form",
+        subject: formSubjects.appointment,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();
