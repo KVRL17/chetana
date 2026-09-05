@@ -6,79 +6,14 @@
   place-items: center;
   min-height: 100dvh;
   overflow: hidden;
-  isolation: isolate;
   color: #f7f3e9;
-  background: radial-gradient(circle at 50% 42%, rgba(91, 139, 128, 0.26), transparent 27rem), linear-gradient(145deg, #0d3035 0%, #123b40 48%, #092a2f 100%);
-}
-
-.opening-intro::before {
-  position: absolute;
-  inset: -25%;
-  z-index: -1;
-  content: "";
-  opacity: 0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px);
-  background-size: 54px 54px;
-  transform: rotate(-7deg) scale(1.08);
-  animation: intro-grid-in 1.8s 0.2s ease-out forwards;
+  background: #123b40;
 }
 
 .opening-intro--leaving {
   pointer-events: none;
   animation: intro-overlay-out 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
-
-.opening-intro__glow {
-  position: absolute;
-  width: min(48vw, 38rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: 0;
-  animation: intro-glow-in 2s 0.35s ease-out forwards;
-}
-
-.opening-intro__glow--one { top: -28%; left: -15%; background: radial-gradient(circle, rgba(197, 154, 97, 0.18), transparent 67%); }
-.opening-intro__glow--two { right: -18%; bottom: -32%; background: radial-gradient(circle, rgba(125, 174, 160, 0.16), transparent 67%); }
-
-.opening-intro__orbit {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: clamp(27rem, 70vw, 57rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.opening-intro__ring {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  border: 1px solid rgba(235, 225, 203, 0.13);
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(0.72);
-  animation: intro-ring-in 1.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.opening-intro__ring--outer { inset: 2%; border-style: dashed; animation-delay: 0.15s; }
-.opening-intro__ring--middle { inset: 14%; border-color: rgba(197, 154, 97, 0.2); animation-delay: 0.28s; }
-.opening-intro__ring--inner { inset: 28%; animation-delay: 0.4s; }
-
-.opening-intro__spark {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #d4ac74;
-  box-shadow: 0 0 18px 5px rgba(212, 172, 116, 0.22);
-  opacity: 0;
-  animation: intro-spark 2.1s 0.7s ease-in-out forwards;
-}
-
-.opening-intro__spark--one { top: 17%; right: 20%; }
-.opening-intro__spark--two { right: 9%; bottom: 34%; animation-delay: 1s; }
-.opening-intro__spark--three { bottom: 16%; left: 23%; animation-delay: 1.25s; }
 
 .opening-intro__content {
   position: relative;
@@ -98,16 +33,6 @@
   place-items: center;
   width: clamp(11.5rem, 25vw, 14.75rem);
   aspect-ratio: 1;
-}
-
-.opening-intro__logo-halo {
-  position: absolute;
-  inset: -18%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(226, 208, 170, 0.2), rgba(197, 154, 97, 0.05) 48%, transparent 70%);
-  opacity: 0;
-  transform: scale(0.5);
-  animation: intro-halo 1.5s 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .opening-intro__logo-shell {
@@ -246,19 +171,6 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-@keyframes intro-grid-in { to { opacity: 1; transform: rotate(-7deg) scale(1); } }
-@keyframes intro-glow-in { to { opacity: 1; } }
-@keyframes intro-ring-in { to { opacity: 1; transform: scale(1); } }
-@keyframes intro-spark {
-  0% { opacity: 0; transform: scale(0.3); }
-  38% { opacity: 0.9; transform: scale(1); }
-  100% { opacity: 0.22; transform: scale(0.65); }
-}
-@keyframes intro-halo {
-  0% { opacity: 0; transform: scale(0.5); }
-  65% { opacity: 1; }
-  100% { opacity: 0.72; transform: scale(1); }
-}
 @keyframes intro-logo-in { to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); } }
 @keyframes intro-logo-shine { to { transform: translateX(80%) rotate(8deg); } }
 @keyframes intro-copy-in { to { opacity: 1; transform: translateY(0); } }
@@ -278,15 +190,13 @@
 }
 
 @media (max-width: 480px) {
-  .opening-intro__orbit { width: 32rem; }
   .opening-intro__subtitle { max-width: 18rem; line-height: 1.6; }
   .opening-intro__motto { letter-spacing: 0.11em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .opening-intro,
-  .opening-intro *,
-  .opening-intro::before {
+  .opening-intro * {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
   }

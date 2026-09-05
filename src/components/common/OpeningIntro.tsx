@@ -58,21 +58,8 @@ export default function OpeningIntro() {
       role="status"
       aria-label="Welcome to Chetana Psychological Counselling Centre"
     >
-      <div className="opening-intro__glow opening-intro__glow--one" aria-hidden="true" />
-      <div className="opening-intro__glow opening-intro__glow--two" aria-hidden="true" />
-
-      <div className="opening-intro__orbit" aria-hidden="true">
-        <span className="opening-intro__ring opening-intro__ring--outer" />
-        <span className="opening-intro__ring opening-intro__ring--middle" />
-        <span className="opening-intro__ring opening-intro__ring--inner" />
-        <span className="opening-intro__spark opening-intro__spark--one" />
-        <span className="opening-intro__spark opening-intro__spark--two" />
-        <span className="opening-intro__spark opening-intro__spark--three" />
-      </div>
-
       <div className="opening-intro__content">
         <div className="opening-intro__logo-stage" aria-hidden="true">
-          <span className="opening-intro__logo-halo" />
           <span className="opening-intro__logo-shell">
             <Image
               src={logo}
