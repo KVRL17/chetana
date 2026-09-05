@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f6f1;
+  --foreground: #18272d;
+  --card: #ffffff;
+  --border: #ded9cf;
+  --primary: #173f45;
+  --secondary: #5d8079;
+  --accent: #c59a61;
+  --muted: #667370;
+  --success: #4f8663;
+  --info: #557c86;
+  --surface: #f1eee7;
+  --surface-deep: #e8e4db;
+  --danger: #b84c4c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-info: var(--info);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  margin: 0;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(93, 128, 121, 0.08), transparent 26rem),
+    radial-gradient(circle at 100% 12%, rgba(197, 154, 97, 0.08), transparent 28rem),
+    var(--background);
+  font-family: var(--font-body), Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), Manrope, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+::selection {
+  background: rgba(23, 63, 69, 0.16);
+  color: var(--primary);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cfc8bc;
+  border-radius: 99px;
+  border: 2px solid var(--background);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(197, 154, 97, 0.7);
+  outline-offset: 3px;
+}
+
+.container-shell {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+
+.section-space {
+  padding-block: clamp(4.5rem, 8vw, 7.5rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(23, 63, 69, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--secondary);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(23, 63, 69, 0.04);
+}
+
+.display-title {
+  font-size: clamp(2.75rem, 6vw, 5.7rem);
+  line-height: 0.98;
+  font-weight: 760;
+  color: var(--primary);
+  text-wrap: balance;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 1.05;
+  font-weight: 740;
+  color: var(--primary);
+  text-wrap: balance;
+}
+
+.lead-copy {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.6vw, 1.16rem);
+  line-height: 1.8;
+}
+
+.premium-card {
+  border: 1px solid rgba(23, 63, 69, 0.1);
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 80px rgba(22, 44, 48, 0.07);
+}
+
+.premium-card-hover {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.premium-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(23, 63, 69, 0.2);
+  box-shadow: 0 30px 80px rgba(22, 44, 48, 0.11);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(23, 63, 69, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 63, 69, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.form-shell input,
+.form-shell select,
+.form-shell textarea {
+  min-height: 3.15rem;
+  border-radius: 0.9rem !important;
+  border-color: rgba(23, 63, 69, 0.14) !important;
+  background: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.form-shell input:focus,
+.form-shell select:focus,
+.form-shell textarea:focus {
+  border-color: rgba(23, 63, 69, 0.4) !important;
+  box-shadow: 0 0 0 4px rgba(23, 63, 69, 0.07) !important;
+  outline: none !important;
+}
+
+.prose-premium h2,
+.prose-premium h3 {
+  color: var(--primary);
+  font-weight: 720;
+  margin-top: 2.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.prose-premium h2 {
+  font-size: 1.65rem;
+}
+
+.prose-premium h3 {
+  font-size: 1.25rem;
+}
+
+.prose-premium p,
+.prose-premium li {
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.prose-premium ul {
+  padding-left: 1.2rem;
+  list-style: disc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Premium mobile refinements — desktop rules remain unchanged above. */
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 4.25rem;
+  }
+
+  .container-shell {
+    width: min(100% - 1.25rem, 1180px);
+  }
+
+  .section-space {
+    padding-block: 4rem;
+  }
+
+  .eyebrow {
+    gap: 0.4rem;
+    padding: 0.42rem 0.68rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.105em;
+    box-shadow: 0 6px 20px rgba(23, 63, 69, 0.035);
+  }
+
+  .display-title {
+    font-size: clamp(2.55rem, 12vw, 3.45rem);
+    line-height: 0.985;
+    letter-spacing: -0.045em;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    line-height: 1.055;
+    letter-spacing: -0.035em;
+  }
+
+  .lead-copy {
+    font-size: 0.98rem;
+    line-height: 1.72;
+  }
+
+  .premium-card {
+    border-radius: 1.35rem;
+    box-shadow: 0 16px 46px rgba(22, 44, 48, 0.065);
+  }
+
+  .form-shell input,
+  .form-shell select,
+  .form-shell textarea {
+    min-height: 3.25rem;
+    font-size: 16px;
+  }
+
+  .prose-premium p,
+  .prose-premium li {
+    line-height: 1.78;
+  }
+}
+
+@media (max-width: 380px) {
+  .container-shell {
+    width: min(100% - 1rem, 1180px);
+  }
+
+  .section-space {
+    padding-block: 3.6rem;
+  }
+
+  .display-title {
+    font-size: clamp(2.35rem, 12vw, 3rem);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
