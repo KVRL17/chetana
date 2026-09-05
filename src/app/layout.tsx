@@ -1,8 +1,10 @@
 import "./globals.css";
+import "@/components/common/OpeningIntro.css";
 import { Inter, Manrope } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { siteConfig } from "@/config/site";
+import OpeningIntro from "@/components/common/OpeningIntro";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-heading", display: "swap" });
@@ -75,7 +77,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdProfessionalService) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }} />
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased">{children}</body>
+      <body className="min-h-screen bg-background text-foreground antialiased">
+        <OpeningIntro />
+        {children}
+      </body>
     </html>
   );
 }
