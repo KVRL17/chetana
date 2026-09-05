@@ -65,7 +65,7 @@ export default function CounsellorPage() {
       <section className="section-space">
         <div className="container-shell grid gap-8 sm:gap-12 lg:grid-cols-[1.12fr_.88fr] lg:items-start">
           <div>
-            <div className="text-center lg:text-left">
+            <div className="text-left">
               <div className="eyebrow mb-5">Professional journey</div>
               <h2 className="section-title">An educator, academic leader, trainer and counselling psychologist</h2>
             </div>

@@ -11,10 +11,10 @@ export const WorkshopsSection = () => (
   <section className="section-space bg-[linear-gradient(135deg,#edf2ef_0%,#f6f2ea_100%)]" id="workshops-training">
     <div className="container-shell">
       <div className="grid gap-9 sm:gap-12 lg:grid-cols-[.78fr_1.22fr] lg:items-end">
-        <div className="text-center lg:text-left">
+        <div className="text-left">
           <div className="eyebrow mb-5"><Presentation className="h-3.5 w-3.5" /> Workshops & training</div>
           <h2 className="section-title">Human development beyond one-to-one counselling</h2>
-          <p className="lead-copy mx-auto mt-5 max-w-xl lg:mx-0">Structured programs for educational institutions, parent groups and organizations can be tailored around audience, duration and learning goals.</p>
+          <p className="lead-copy mt-5 max-w-xl">Structured programs for educational institutions, parent groups and organizations can be tailored around audience, duration and learning goals.</p>
           <Link href="/training" className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-primary transition hover:text-secondary sm:mt-7">Explore all training programs <ArrowRight className="h-4 w-4" /></Link>
         </div>
         <div className="grid gap-3.5 sm:gap-4 md:grid-cols-3">

@@ -45,10 +45,10 @@ export default function TrainingPage() {
 
       <section id="request" className="section-space bg-[#f0eee8]">
         <div className="container-shell grid gap-7 sm:gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-start">
-          <div className="text-center lg:sticky lg:top-28 lg:text-left">
+          <div className="text-left lg:sticky lg:top-28">
             <div className="eyebrow mb-5">Program enquiry</div>
             <h2 className="section-title">Tell us what you are planning</h2>
-            <p className="lead-copy mx-auto mt-5 lg:mx-0">Share the audience, approximate participant count, preferred topic and location. The centre can then respond with suitable next steps.</p>
+            <p className="lead-copy mt-5">Share the audience, approximate participant count, preferred topic and location. The centre can then respond with suitable next steps.</p>
             <div className="mt-6 rounded-[1.15rem] border border-primary/8 bg-white p-4.5 text-left text-[13px] leading-6 text-muted shadow-sm sm:mt-7 sm:rounded-2xl sm:p-5 sm:text-sm">No fixed package is assumed. Program scope can be discussed around your institution’s practical requirements.</div>
           </div>
           <div className="premium-card form-shell p-5 sm:p-8"><WorkshopForm /></div>

@@ -109,7 +109,7 @@ export default function SchoolsCollegesPage() {
               </div>
             </div>
             <div>
-              <div className="text-center lg:text-left">
+              <div className="text-left">
                 <div className="eyebrow mb-5">What a school counsellor teaches</div>
                 <h2 className="section-title">Academic, career, social and emotional development</h2>
               </div>

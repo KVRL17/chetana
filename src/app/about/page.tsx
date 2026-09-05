@@ -48,7 +48,7 @@ export default function AboutPage() {
 
       <section className="section-space">
         <div className="container-shell grid gap-7 sm:gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
-          <div className="text-center lg:text-left">
+          <div className="text-left">
             <div className="eyebrow mb-5">About us</div>
             <h2 className="section-title">Comprehensive support in a safe, inclusive environment</h2>
           </div>

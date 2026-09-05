@@ -45,7 +45,7 @@ export const WorkingHours = () => (
 export const GoogleMapsCard = () => (
   <div className="premium-card overflow-hidden">
     <div className="grid lg:grid-cols-[.38fr_.62fr]">
-      <div className="flex flex-col items-center justify-center p-6 text-center sm:p-9 lg:items-start lg:text-left">
+      <div className="flex flex-col items-start justify-center p-6 text-left sm:p-9">
         <div className="eyebrow w-fit">Visit the centre</div>
         <h3 className="mt-5 text-2xl font-extrabold text-primary">Chetana in Atchutapuram</h3>
         <p className="mt-3 text-sm leading-7 text-muted">{siteConfig.address.full}</p>

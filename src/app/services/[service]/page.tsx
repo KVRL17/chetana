@@ -47,7 +47,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       <section className="section-space">
         <div className="container-shell grid gap-7 sm:gap-10 lg:grid-cols-[1fr_330px] lg:items-start">
           <div>
-            <div className="text-center sm:text-left">
+            <div className="text-left">
               <div className="eyebrow mb-5">Areas we can explore</div>
               <h2 className="section-title">What this service can focus on</h2>
             </div>
@@ -61,7 +61,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             </div>
 
             <div className="mt-10 sm:mt-14">
-              <div className="text-center sm:text-left">
+              <div className="text-left">
                 <div className="eyebrow mb-5">Who may benefit</div>
                 <h2 className="section-title">This may be useful if you relate to any of these situations</h2>
               </div>

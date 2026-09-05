@@ -8,6 +8,7 @@ import { HowWorksSection } from "@/components/home/HowWorksSection";
 import { WorkshopsSection } from "@/components/home/WorkshopsSection";
 import { FAQPreview } from "@/components/home/FAQPreview";
 import { AppointmentCTA } from "@/components/home/AppointmentCTA";
+import { PamphletGallery } from "@/components/common/PamphletGallery";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <WhoBenefitSection />
       <HowWorksSection />
       <WorkshopsSection />
+      <PamphletGallery />
       <FAQPreview />
       <AppointmentCTA />
     </PageWrapper>

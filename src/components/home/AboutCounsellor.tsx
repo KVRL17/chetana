@@ -33,10 +33,10 @@ export const AboutCounsellor = () => (
         </div>
       </div>
 
-      <div className="text-center lg:text-left">
+      <div className="text-left">
         <div className="eyebrow border-white/10 bg-white/5 text-accent">Experience with perspective</div>
         <h2 className="mt-5 text-[clamp(2.15rem,10vw,3rem)] font-[760] leading-[1.045] text-white sm:mt-6 lg:text-[clamp(2.2rem,4.5vw,4.2rem)]">Guidance grounded in decades of counselling, education and human development.</h2>
-        <p className="mx-auto mt-5 max-w-2xl text-[14px] leading-7 text-white/68 sm:mt-6 sm:text-base sm:leading-8 lg:mx-0">
+        <p className="mt-5 max-w-2xl text-[14px] leading-7 text-white/68 sm:mt-6 sm:text-base sm:leading-8">
           With more than {siteConfig.counsellorExperience} of professional experience, {siteConfig.counsellorName} supports students, individuals, parents and families with a calm, practical and respectful approach. His work also includes career guidance and development programs for educational institutions and organizations.
         </p>
 

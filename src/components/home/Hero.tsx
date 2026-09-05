@@ -16,7 +16,7 @@ export const Hero = () => {
       <div className="absolute -left-28 top-10 h-80 w-80 rounded-full bg-secondary/10 blur-3xl sm:h-96 sm:w-96" />
       <div className="absolute -right-24 -top-14 h-80 w-80 rounded-full bg-accent/10 blur-3xl sm:-right-20 sm:-top-10 sm:h-[30rem] sm:w-[30rem]" />
       <div className="container-shell relative grid items-center gap-9 py-10 sm:gap-12 sm:py-14 lg:min-h-[calc(100vh-110px)] lg:grid-cols-[1.08fr_.92fr] lg:py-20">
-        <div className="mx-auto max-w-3xl text-center lg:mx-0 lg:text-left">
+        <div className="max-w-3xl text-left">
           <div className="eyebrow mb-5 sm:mb-6">
             <ShieldCheck className="h-3.5 w-3.5" />
             Professional guidance · Since 1996
@@ -24,7 +24,7 @@ export const Hero = () => {
           <h1 className="display-title">
             Clarity for the mind. <span className="text-secondary">Confidence for life.</span>
           </h1>
-          <p className="lead-copy mx-auto mt-5 max-w-2xl sm:mt-7 lg:mx-0">
+          <p className="lead-copy mt-5 max-w-2xl sm:mt-7">
             {siteConfig.heroSupportingLine}
           </p>
 
@@ -32,7 +32,7 @@ export const Hero = () => {
             {focusAreas.map(({ label, icon: Icon }, index) => (
               <div
                 key={label}
-                className={`flex items-center justify-center gap-2.5 rounded-[1.1rem] border border-primary/8 bg-white/72 px-3 py-3 text-left text-[12px] font-extrabold leading-4 text-foreground/80 shadow-[0_8px_24px_rgba(23,63,69,.035)] backdrop-blur sm:justify-start sm:rounded-2xl sm:bg-white/65 sm:px-4 sm:text-sm sm:font-bold sm:shadow-none ${index === 2 ? "col-span-2 sm:col-span-1" : ""}`}
+                className={`flex items-center justify-start gap-2.5 rounded-[1.1rem] border border-primary/8 bg-white/72 px-3 py-3 text-left text-[12px] font-extrabold leading-4 text-foreground/80 shadow-[0_8px_24px_rgba(23,63,69,.035)] backdrop-blur sm:rounded-2xl sm:bg-white/65 sm:px-4 sm:text-sm sm:font-bold sm:shadow-none ${index === 2 ? "col-span-2 sm:col-span-1" : ""}`}
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.7rem] bg-primary/7 text-primary sm:h-9 sm:w-9 sm:rounded-xl">
                   <Icon className="h-4 w-4" />
@@ -51,7 +51,7 @@ export const Hero = () => {
             </Link>
           </div>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] font-bold text-muted sm:mt-8 sm:text-xs sm:font-semibold lg:justify-start">
+          <div className="mt-6 flex flex-wrap justify-start gap-x-4 gap-y-2 text-[11px] font-bold text-muted sm:mt-8 sm:text-xs sm:font-semibold">
             {["Telugu, English & Hindi", "In-person, phone & online", "Atchutapuram, Anakapalli"].map((item) => (
               <span key={item} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-secondary" />{item}</span>
             ))}

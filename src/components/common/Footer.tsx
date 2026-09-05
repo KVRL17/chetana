@@ -11,8 +11,8 @@ export default function Footer() {
       <div className="absolute -right-20 top-0 h-80 w-80 rounded-full border border-white/6" />
       <div className="container-shell relative pb-28 pt-11 sm:pt-18 md:py-18">
         <div className="grid grid-cols-2 gap-x-5 gap-y-9 border-b border-white/10 pb-9 sm:gap-x-8 sm:gap-y-12 sm:pb-12 lg:grid-cols-[1.35fr_.8fr_.8fr_1.2fr]">
-          <div className="col-span-2 mx-auto max-w-sm text-center lg:col-span-1 lg:mx-0 lg:text-left">
-            <div className="mb-4 flex items-center justify-center gap-3 sm:mb-5 lg:justify-start">
+          <div className="col-span-2 max-w-sm text-left lg:col-span-1">
+            <div className="mb-4 flex items-center justify-start gap-3 sm:mb-5">
               <BrandMark className="bg-white text-primary shadow-none" />
               <div className="text-left">
                 <div className="text-xl font-extrabold">Chetana</div>
@@ -67,12 +67,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-4 pt-6 text-center text-[10.5px] text-white/45 sm:gap-5 sm:pt-7 sm:text-xs lg:flex-row lg:justify-between lg:text-left">
+        <div className="flex flex-col items-start gap-4 pt-6 text-left text-[10.5px] text-white/45 sm:gap-5 sm:pt-7 sm:text-xs lg:flex-row lg:justify-between">
           <div>
             <p>© {new Date().getFullYear()} {siteConfig.businessName}. All rights reserved.</p>
             <p className="mt-1 text-white/35">An initiative of “{siteConfig.initiativeName}”.</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-x-5 lg:justify-end">
+          <div className="flex flex-wrap justify-start gap-x-4 gap-y-2 sm:gap-x-5 lg:justify-end">
             {siteConfig.footerNav.legal.map((item) => (
               <Link key={item.href} href={item.href} className="transition hover:text-white">{item.label}</Link>
             ))}
