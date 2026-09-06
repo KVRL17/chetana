@@ -6,6 +6,13 @@ import { PageHero } from "@/components/ui/PageHero";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { blogData } from "@/data/blogData";
 import { PamphletGallery } from "@/components/common/PamphletGallery";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Counselling & Wellbeing Resources",
+  description: "Read practical resources about counselling, student wellbeing, career planning, parenting, relationships and personal development from Chetana.",
+  path: "/resources",
+});
 
 const topics = [
   { icon: Sparkles, title: "Counselling basics", copy: "Understand what counselling is and when guidance may be useful." },

@@ -13,6 +13,13 @@ import { Breadcrumb } from "@/components/common/Breadcrumb";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { schoolCounsellingContent } from "@/data/brochureContent";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "School & College Counselling Programs in Anakapalli",
+  description: "Counselling, career awareness, exam stress, parent awareness and teacher development programs for schools and colleges in Anakapalli and Visakhapatnam.",
+  path: "/training/schools-colleges",
+});
 
 const programs = [
   "Student Motivation Sessions",

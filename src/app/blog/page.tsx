@@ -3,6 +3,13 @@ import { Breadcrumb } from "@/components/common/Breadcrumb";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { blogData, blogCategories } from "@/data/blogData";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Counselling, Career & Wellbeing Articles",
+  description: "Helpful articles about counselling, exam stress, student career guidance, parenting teenagers, relationships and work-life balance.",
+  path: "/blog",
+});
 
 export default function BlogPage() {
   return (

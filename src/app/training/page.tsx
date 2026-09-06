@@ -6,6 +6,13 @@ import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { WorkshopForm } from "@/components/forms/WorkshopForm";
 import { trainingPrograms } from "@/data/trainingData";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Training, Workshops & HRD Programs in Anakapalli",
+  description: "Student development, career guidance, parent awareness, teacher training and corporate HRD workshops for schools, colleges and organizations in Anakapalli.",
+  path: "/training",
+});
 
 export default function TrainingPage() {
   return (

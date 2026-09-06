@@ -24,6 +24,13 @@ import {
   brochureServiceHighlights,
   wellnessDimensions,
 } from "@/data/brochureContent";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Counselling Services in Atchutapuram & Anakapalli",
+  description: "Explore individual, student, career, family, parent, child and stress counselling services in Atchutapuram, Anakapalli, with online and in-person options.",
+  path: "/services",
+});
 
 const icons = [UserRound, Sparkles, Compass, UsersRound, HeartHandshake, Baby, Brain, TrendingUp];
 

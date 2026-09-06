@@ -18,6 +18,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AppointmentCTA } from "@/components/home/AppointmentCTA";
 import { siteConfig } from "@/config/site";
 import { counsellorProfile } from "@/data/brochureContent";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Suri Babu Saragadam, Counselling Psychologist",
+  description: "Meet Mr. Suri Babu Saragadam, educator, trainer and counselling psychologist with over 30 years of experience serving students, parents and institutions.",
+  path: "/about/counsellor",
+});
 
 const areas = [
   "Individual Counselling",

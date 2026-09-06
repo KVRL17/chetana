@@ -4,6 +4,13 @@ import PageWrapper from "@/components/layouts/PageWrapper";
 import { Breadcrumb } from "@/components/common/Breadcrumb";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Corporate HRD Training Programs in Anakapalli",
+  description: "Practical HRD training in communication, leadership, team development, emotional intelligence, stress management and workplace wellbeing for organizations.",
+  path: "/training/hrd",
+});
 
 const areas = ["Communication", "Leadership", "Team Development", "Stress Management", "Decision Making", "Conflict Resolution", "Emotional Intelligence", "Workplace Wellbeing", "Personal Effectiveness", "Goal Setting", "Motivation"];
 

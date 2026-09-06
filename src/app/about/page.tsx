@@ -17,7 +17,14 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AppointmentCTA } from "@/components/home/AppointmentCTA";
 import { siteConfig } from "@/config/site";
 import { aboutChetana } from "@/data/brochureContent";
+import { createPageMetadata } from "@/lib/seo";
 import logo from "../../../logo-green.png";
+
+export const metadata = createPageMetadata({
+  title: "About Chetana Counselling Centre in Atchutapuram",
+  description: "Learn about Chetana Psychological Counselling Centre, providing counselling, career guidance and human development programs in Atchutapuram and Anakapalli.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

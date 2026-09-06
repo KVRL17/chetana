@@ -3,6 +3,13 @@ import PageWrapper from "@/components/layouts/PageWrapper";
 import { Breadcrumb } from "@/components/common/Breadcrumb";
 import { PageHero } from "@/components/ui/PageHero";
 import { siteConfig } from "@/config/site";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Privacy Policy",
+  description: "Learn how information submitted through the Chetana website is handled for counselling enquiries, appointment requests and communication.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

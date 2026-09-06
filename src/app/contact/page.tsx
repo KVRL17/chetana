@@ -6,6 +6,13 @@ import { PageHero } from "@/components/ui/PageHero";
 import { ContactCard, GoogleMapsCard, WorkingHours } from "@/components/common/ContactCard";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { siteConfig } from "@/config/site";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Contact Chetana Counselling Centre, Atchutapuram",
+  description: "Contact Chetana Psychological Counselling Centre in Atchutapuram, Anakapalli by phone, WhatsApp or email for counselling and training enquiries.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   const whatsappUrl = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(siteConfig.whatsappMessages.general)}`;

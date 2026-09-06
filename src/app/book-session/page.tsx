@@ -5,6 +5,13 @@ import { PageHero } from "@/components/ui/PageHero";
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import { ContactCard, WorkingHours } from "@/components/common/ContactCard";
 import type { AppointmentFormValues } from "@/schemas/appointmentSchema";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Book a Counselling Session in Atchutapuram",
+  description: "Request an in-person, phone or online counselling session with Chetana for individual, student, career, family, parent or emotional wellbeing support.",
+  path: "/book-session",
+});
 
 const allowedServices = new Set<AppointmentFormValues["counsellingFor"]>([
   "individual-counselling", "student-counselling", "career-counselling", "family-counselling", "parent-guidance", "child-adolescent-guidance", "stress-emotional-wellbeing", "personal-development",
