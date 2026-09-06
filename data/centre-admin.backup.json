@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-06T06:02:51.455Z",
+  "updatedAt": "2026-09-06T15:40:39.427Z",
   "clients": [
     {
       "fullName": "kusuma",
@@ -65,6 +65,38 @@
       "createdAt": "2026-09-06T02:54:35.677Z",
       "updatedAt": "2026-09-06T06:02:51.407Z",
       "clientCode": "CHT-0002"
+    },
+    {
+      "fullName": "venky",
+      "phone": "9381690958",
+      "alternatePhone": "",
+      "email": "venky200364@gmail.com",
+      "dateOfBirth": "",
+      "age": "23",
+      "gender": "male",
+      "occupationOrClass": "",
+      "schoolCollegeOrCompany": "",
+      "parentGuardianName": "",
+      "relationship": "",
+      "city": "asdfg",
+      "address": "",
+      "emergencyContact": "",
+      "counsellingFor": "individual-counselling",
+      "primaryConcern": "asdfgzxcvb",
+      "preferredLanguage": "english",
+      "preferredSessionType": "in-person",
+      "referralSource": "Website — Appointment Form",
+      "assignedCounsellor": "",
+      "status": "New",
+      "consent": "Received",
+      "tags": "appointment",
+      "documents": "",
+      "notes": "Created from website enquiry received 06 Sept 2026, 09:08 pm.",
+      "sourceSubmissionId": "b97ddb5a-423a-42f0-8f08-07167fbfb3bc",
+      "id": "7f92842b-d3b4-4bff-912f-cc52aedede33",
+      "createdAt": "2026-09-06T15:40:37.088Z",
+      "updatedAt": "2026-09-06T15:40:37.088Z",
+      "clientCode": "CHT-0003"
     }
   ],
   "leads": [
@@ -88,6 +120,27 @@
       "createdAt": "2026-09-06T06:02:51.429Z",
       "updatedAt": "2026-09-06T06:02:51.429Z",
       "leadCode": "LEAD-0001"
+    },
+    {
+      "fullName": "venky",
+      "phone": "9381690958",
+      "email": "venky200364@gmail.com",
+      "source": "Website",
+      "enquiryFor": "individual-counselling",
+      "preferredMode": "in-person",
+      "assignedTo": "",
+      "stage": "New",
+      "priority": "Normal",
+      "nextFollowUp": "",
+      "estimatedValue": 0,
+      "city": "asdfg",
+      "notes": "Website intake • Appointment Form • received 2026-09-06T15:38:22.175Z • asdfgzxcvb",
+      "convertedClientId": "",
+      "sourceSubmissionId": "b97ddb5a-423a-42f0-8f08-07167fbfb3bc",
+      "id": "0c7235ff-fa4b-4110-b996-2ca1bbbe0f01",
+      "createdAt": "2026-09-06T15:38:22.279Z",
+      "updatedAt": "2026-09-06T15:40:39.427Z",
+      "leadCode": "LEAD-0002"
     }
   ],
   "sessions": [],
@@ -185,6 +238,46 @@
       "recordId": "5bfea385-7b26-4019-aa03-97fc9c3b638e",
       "label": "kusuma pentakota",
       "at": "2026-09-06T06:02:51.455Z"
+    },
+    {
+      "id": "b963a5f2-8d68-4278-b999-02f78d4f1797",
+      "action": "created",
+      "collection": "leads",
+      "recordId": "0c7235ff-fa4b-4110-b996-2ca1bbbe0f01",
+      "label": "venky",
+      "at": "2026-09-06T15:38:22.280Z"
+    },
+    {
+      "id": "fec41777-a744-46ca-abfe-a4497c4500ad",
+      "action": "updated",
+      "collection": "leads",
+      "recordId": "0c7235ff-fa4b-4110-b996-2ca1bbbe0f01",
+      "label": "venky",
+      "at": "2026-09-06T15:40:11.826Z"
+    },
+    {
+      "id": "10db539a-2d30-45d9-a302-c20fd4221f40",
+      "action": "updated",
+      "collection": "leads",
+      "recordId": "0c7235ff-fa4b-4110-b996-2ca1bbbe0f01",
+      "label": "venky",
+      "at": "2026-09-06T15:40:24.534Z"
+    },
+    {
+      "id": "bc62bea4-70fb-4da9-a511-73000329781b",
+      "action": "created",
+      "collection": "clients",
+      "recordId": "7f92842b-d3b4-4bff-912f-cc52aedede33",
+      "label": "venky",
+      "at": "2026-09-06T15:40:37.088Z"
+    },
+    {
+      "id": "31b9344d-a60c-4f6f-b5bf-894b5608d0c7",
+      "action": "updated",
+      "collection": "leads",
+      "recordId": "0c7235ff-fa4b-4110-b996-2ca1bbbe0f01",
+      "label": "venky",
+      "at": "2026-09-06T15:40:39.427Z"
     }
   ]
 }
