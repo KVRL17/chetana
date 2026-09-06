@@ -6,7 +6,9 @@ import { contactSchema } from "@/schemas/contactSchema";
 import type { ContactFormValues } from "@/schemas/contactSchema";
 import { cn } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
-import { siteConfig, formSubjects, successMessages, errorMessages, privacyNote } from "@/config/site";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
+import { formSubjects, successMessages, errorMessages, privacyNote } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, User, Mail, Phone, MessageSquare } from "lucide-react";
 
@@ -16,6 +18,8 @@ interface ContactFormProps {
 
 export const ContactForm = ({ onSuccess }: ContactFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "contact-form-success");
   const methods = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
   });
@@ -23,34 +27,6 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
   const onSubmit = async (data: ContactFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-      form.className = "hidden";
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.contact);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Contact Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Full Name", data.fullName);
-      addField("Mobile Number", data.phone);
-      addField("Email Address", data.email || "");
-
       const subjectMap: Record<string, string> = {
         general: "General Enquiry",
         counselling: "Counselling Enquiry",
@@ -61,9 +37,6 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
         institutional: "Institutional Program",
         other: "Other",
       };
-      addField("Subject", subjectMap[data.subject] || "General Enquiry");
-      addField("Message", data.message);
-
       await saveFormSubmission({
         formType: "contact",
         formName: "Contact Form",
@@ -71,9 +44,17 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.contact,
+        "Form Name": "Contact Form",
+        "Full Name": data.fullName,
+        "Mobile Number": data.phone,
+        "Email Address": data.email || "",
+        Subject: subjectMap[data.subject] || "General Enquiry",
+        Message: data.message,
+      });
 
+      setSubmittedName(data.fullName);
       setSubmitStatus("success");
       onSuccess?.();
     } catch {
@@ -83,11 +64,12 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="contact-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <div className="w-16 h-16 rounded-full bg-success/10 mx-auto mb-4 flex items-center justify-center">
           <CheckCircle className="w-8 h-8 text-success" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your contact enquiry was submitted successfully.</p>
         <p className="text-muted">{successMessages.contact}</p>
       </div>
     );

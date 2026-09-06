@@ -6,7 +6,9 @@ import { studentCounsellingSchema } from "@/schemas/studentCounsellingSchema";
 import type { StudentCounsellingFormValues } from "@/schemas/studentCounsellingSchema";
 import { cn } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
-import { siteConfig, formSubjects, successMessages } from "@/config/site";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
+import { formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, GraduationCap, MessageSquare } from "lucide-react";
 
@@ -16,6 +18,8 @@ interface StudentFormProps {
 
 export const StudentForm = ({ onSuccess }: StudentFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "student-form-success");
   const methods = useForm<StudentCounsellingFormValues>({
     resolver: zodResolver(studentCounsellingSchema),
   });
@@ -23,38 +27,6 @@ export const StudentForm = ({ onSuccess }: StudentFormProps) => {
   const onSubmit = async (data: StudentCounsellingFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.student);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Student Counselling Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Student Name", data.studentName);
-      addField("Age", data.age || "");
-      addField("Current Class", data.currentClass);
-      addField("Parent / Guardian Name", data.parentName);
-      addField("Mobile Number", data.phone);
-      addField("Email Address", data.email || "");
-      addField("Primary Concern", data.primaryConcern);
-      addField("Message", data.message);
-
       await saveFormSubmission({
         formType: "student",
         formName: "Student Counselling Form",
@@ -62,9 +34,20 @@ export const StudentForm = ({ onSuccess }: StudentFormProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.student,
+        "Form Name": "Student Counselling Form",
+        "Student Name": data.studentName,
+        Age: data.age || "",
+        "Current Class": data.currentClass,
+        "Parent / Guardian Name": data.parentName,
+        "Mobile Number": data.phone,
+        "Email Address": data.email || "",
+        "Primary Concern": data.primaryConcern,
+        Message: data.message,
+      });
 
+      setSubmittedName(data.studentName);
       setSubmitStatus("success");
       onSuccess?.();
     } catch {
@@ -74,9 +57,10 @@ export const StudentForm = ({ onSuccess }: StudentFormProps) => {
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="student-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <CheckCircle className="w-16 h-16 text-success mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your student counselling enquiry was submitted successfully.</p>
         <p className="text-muted">{successMessages.student}</p>
       </div>
     );

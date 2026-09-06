@@ -6,6 +6,8 @@ import { appointmentSchema } from "@/schemas/appointmentSchema";
 import type { AppointmentFormValues } from "@/schemas/appointmentSchema";
 import { cn, getTodayDate, getWhatsAppLink } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
 import { siteConfig, formSubjects, successMessages, errorMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, Calendar, Phone, Mail, User, MessageSquare } from "lucide-react";
@@ -17,6 +19,8 @@ interface AppointmentFormProps {
 
 export const AppointmentForm = ({ onSuccess, initialService = "individual-counselling" }: AppointmentFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "appointment-form-success");
 
   const {
     register,
@@ -44,47 +48,6 @@ export const AppointmentForm = ({ onSuccess, initialService = "individual-counse
   const onSubmit = async (data: AppointmentFormValues) => {
     setSubmitStatus("sending");
     try {
-      // Use FormSubmit.co with hidden fields
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-      form.className = "hidden";
-
-      // Hidden fields for FormSubmit
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.appointment);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Appointment Form");
-
-      // Add honeypot
-      const hpInput = document.createElement("input");
-      hpInput.type = "text";
-      hpInput.name = "_gotcha";
-      hpInput.style.display = "none";
-      form.appendChild(hpInput);
-
-      addField("Full Name", data.fullName);
-      addField("Phone Number", data.phone);
-      addField("Email Address", data.email || "");
-      addField("Age", data.age?.toString() || "");
-      addField("Gender", data.gender || "");
-      addField("I am a", data.counsellingFor);
-      addField("Counselling For", data.counsellingFor);
-      addField("Preferred Language", data.preferredLanguage);
-      addField("Preferred Session Type", data.preferredSessionType);
-      addField("Preferred Date", data.preferredDate || "");
-      addField("Preferred Time", data.preferredTime || "");
-      addField("City / Location", data.cityLocation || "");
-      addField("Brief Message", data.briefMessage);
-
       await saveFormSubmission({
         formType: "appointment",
         formName: "Appointment Form",
@@ -92,9 +55,25 @@ export const AppointmentForm = ({ onSuccess, initialService = "individual-counse
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.appointment,
+        "Form Name": "Appointment Form",
+        "Full Name": data.fullName,
+        "Phone Number": data.phone,
+        "Email Address": data.email || "",
+        Age: data.age?.toString() || "",
+        Gender: data.gender || "",
+        "I am a": data.counsellingFor,
+        "Counselling For": data.counsellingFor,
+        "Preferred Language": data.preferredLanguage,
+        "Preferred Session Type": data.preferredSessionType,
+        "Preferred Date": data.preferredDate || "",
+        "Preferred Time": data.preferredTime || "",
+        "City / Location": data.cityLocation || "",
+        "Brief Message": data.briefMessage,
+      });
 
+      setSubmittedName(data.fullName);
       setSubmitStatus("success");
       onSuccess?.(data);
     } catch {
@@ -104,11 +83,12 @@ export const AppointmentForm = ({ onSuccess, initialService = "individual-counse
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="appointment-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <div className="w-16 h-16 rounded-full bg-success/10 mx-auto mb-4 flex items-center justify-center">
           <CheckCircle className="w-8 h-8 text-success" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your appointment request was submitted successfully.</p>
         <p className="text-muted mb-2">
           {successMessages.appointment}
         </p>

@@ -6,7 +6,9 @@ import { careerCounsellingSchema } from "@/schemas/careerCounsellingSchema";
 import type { CareerCounsellingFormValues } from "@/schemas/careerCounsellingSchema";
 import { cn } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
-import { siteConfig, formSubjects, successMessages } from "@/config/site";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
+import { formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, User, Phone, Mail, GraduationCap, MapPin, MessageSquare } from "lucide-react";
 
@@ -16,6 +18,8 @@ interface CareerFormProps {
 
 export const CareerForm = ({ onSuccess }: CareerFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "career-form-success");
   const methods = useForm<CareerCounsellingFormValues>({
     resolver: zodResolver(careerCounsellingSchema),
   });
@@ -23,43 +27,6 @@ export const CareerForm = ({ onSuccess }: CareerFormProps) => {
   const onSubmit = async (data: CareerCounsellingFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-      form.className = "hidden";
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.career);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Career Counselling Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Student Name", String(data.studentName));
-      addField("Parent Name", String(data.parentName || ""));
-      addField("Mobile Number", String(data.phone));
-      addField("Email Address", String(data.email || ""));
-      addField("Current Qualification", String(data.currentClass));
-      addField("School / College", String(data.schoolCollege));
-      addField("Career Area of Interest", String(data.careerArea || ""));
-      addField("Current Stream", String(data.currentStream || ""));
-      addField("Preferred Course", String(data.preferredCourse || ""));
-      addField("Career Concern", String(data.mainConcern || ""));
-      addField("City", String(data.city || ""));
-      addField("Message", String(data.message));
-
       await saveFormSubmission({
         formType: "career",
         formName: "Career Counselling Form",
@@ -67,9 +34,24 @@ export const CareerForm = ({ onSuccess }: CareerFormProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.career,
+        "Form Name": "Career Counselling Form",
+        "Student Name": String(data.studentName),
+        "Parent Name": String(data.parentName || ""),
+        "Mobile Number": String(data.phone),
+        "Email Address": String(data.email || ""),
+        "Current Qualification": String(data.currentClass),
+        "School / College": String(data.schoolCollege),
+        "Career Area of Interest": String(data.careerArea || ""),
+        "Current Stream": String(data.currentStream || ""),
+        "Preferred Course": String(data.preferredCourse || ""),
+        "Career Concern": String(data.mainConcern || ""),
+        City: String(data.city || ""),
+        Message: String(data.message),
+      });
 
+      setSubmittedName(data.studentName);
       setSubmitStatus("success");
       onSuccess?.();
     } catch {
@@ -79,11 +61,12 @@ export const CareerForm = ({ onSuccess }: CareerFormProps) => {
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="career-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <div className="w-16 h-16 rounded-full bg-success/10 mx-auto mb-4 flex items-center justify-center">
           <CheckCircle className="w-8 h-8 text-success" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your career counselling enquiry was submitted successfully.</p>
         <p className="text-muted">{successMessages.career}</p>
       </div>
     );

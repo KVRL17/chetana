@@ -5,7 +5,9 @@ import { callbackSchema } from "@/schemas/callbackSchema";
 import type { CallbackFormValues } from "@/schemas/callbackSchema";
 import { cn } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
-import { siteConfig, formSubjects, successMessages } from "@/config/site";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
+import { formSubjects, successMessages } from "@/config/site";
 import { X, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -16,6 +18,8 @@ interface CallbackModalProps {
 
 export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "callback-form-success");
   const methods = useForm<CallbackFormValues>({
     resolver: zodResolver(callbackSchema),
   });
@@ -23,34 +27,6 @@ export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
   const onSubmit = async (data: CallbackFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.callback);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Callback Request Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Name", data.name);
-      addField("Phone Number", data.phone);
-      addField("Interested Service", data.interestedService);
-      addField("Preferred Callback Time", data.preferredCallbackTime);
-
       await saveFormSubmission({
         formType: "callback",
         formName: "Callback Request Form",
@@ -58,11 +34,17 @@ export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.callback,
+        "Form Name": "Callback Request Form",
+        Name: data.name,
+        "Phone Number": data.phone,
+        "Interested Service": data.interestedService,
+        "Preferred Callback Time": data.preferredCallbackTime,
+      });
 
+      setSubmittedName(data.name);
       setSubmitStatus("success");
-      setTimeout(onClose, 2000);
     } catch {
       setSubmitStatus("error");
     }
@@ -86,8 +68,10 @@ export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
 
         <div className="p-6">
           {submitStatus === "success" ? (
-            <div className="text-center py-8">
+            <div id="callback-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-8 outline-none">
               <CheckCircle className="w-16 h-16 text-success mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+              <p className="font-medium text-foreground mb-3">Your callback request was submitted successfully.</p>
               <p className="text-muted">{successMessages.callback}</p>
             </div>
           ) : (

@@ -6,7 +6,9 @@ import { workshopSchema } from "@/schemas/workshopSchema";
 import type { WorkshopFormValues } from "@/schemas/workshopSchema";
 import { cn, getTodayDate } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
-import { siteConfig, formSubjects, successMessages } from "@/config/site";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
+import { formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, Building, Users, Calendar, MapPin, MessageSquare } from "lucide-react";
 
@@ -16,6 +18,8 @@ interface WorkshopFormProps {
 
 export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "workshop-form-success");
   const methods = useForm<WorkshopFormValues>({
     resolver: zodResolver(workshopSchema),
   });
@@ -23,34 +27,6 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
   const onSubmit = async (data: WorkshopFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.workshop);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Workshop / Training Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Contact Person", data.contactPerson);
-      addField("Organization Name", data.organizationName);
-      addField("Mobile Number", data.phone);
-      addField("Email Address", data.email);
-
       const orgTypeMap: Record<string, string> = {
         school: "School",
         college: "College",
@@ -59,13 +35,6 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
         "community-organization": "Community Organization",
         other: "Other",
       };
-      addField("Organization Type", orgTypeMap[data.organizationType]);
-      addField("Program Interested", data.programInterested);
-      addField("Expected Participants", data.expectedParticipants?.toString() || "");
-      addField("Preferred Date", data.preferredDate || "");
-      addField("Location", data.location);
-      addField("Requirements", data.requirements);
-
       await saveFormSubmission({
         formType: "workshop",
         formName: "Workshop / Training Form",
@@ -73,9 +42,22 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.workshop,
+        "Form Name": "Workshop / Training Form",
+        "Contact Person": data.contactPerson,
+        "Organization Name": data.organizationName,
+        "Mobile Number": data.phone,
+        "Email Address": data.email,
+        "Organization Type": orgTypeMap[data.organizationType],
+        "Program Interested": data.programInterested,
+        "Expected Participants": data.expectedParticipants?.toString() || "",
+        "Preferred Date": data.preferredDate || "",
+        Location: data.location,
+        Requirements: data.requirements,
+      });
 
+      setSubmittedName(data.contactPerson);
       setSubmitStatus("success");
       onSuccess?.();
     } catch {
@@ -85,9 +67,10 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="workshop-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <CheckCircle className="w-16 h-16 text-success mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your workshop and training enquiry was submitted successfully.</p>
         <p className="text-muted">{successMessages.workshop}</p>
       </div>
     );

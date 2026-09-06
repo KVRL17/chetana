@@ -6,6 +6,8 @@ import { familyCounsellingSchema } from "@/schemas/familyCounsellingSchema";
 import type { FamilyCounsellingFormValues } from "@/schemas/familyCounsellingSchema";
 import { cn } from "@/lib/utils";
 import { saveFormSubmission } from "@/lib/form-storage-client";
+import { submitToFormSubmit } from "@/lib/form-submit-client";
+import { useFormSuccessScroll } from "@/hooks/useFormSuccessScroll";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, Users, MessageSquare, Globe } from "lucide-react";
@@ -16,6 +18,8 @@ interface FamilyFormProps {
 
 export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [submittedName, setSubmittedName] = useState("");
+  useFormSuccessScroll(submitStatus, "family-form-success");
   const methods = useForm<FamilyCounsellingFormValues>({
     resolver: zodResolver(familyCounsellingSchema),
   });
@@ -23,37 +27,6 @@ export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
   const onSubmit = async (data: FamilyCounsellingFormValues) => {
     setSubmitStatus("sending");
     try {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = siteConfig.formSubmitEndpoint;
-
-      const addField = (name: string, value: string) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
-      };
-
-      addField("_subject", formSubjects.family);
-      addField("_template", "table");
-      addField("_captcha", "true");
-      addField("Form Name", "Family Counselling Form");
-
-      const hp = document.createElement("input");
-      hp.type = "text";
-      hp.name = "_gotcha";
-      hp.style.display = "none";
-      form.appendChild(hp);
-
-      addField("Name", data.name);
-      addField("Mobile Number", data.phone);
-      addField("Email Address", data.email || "");
-      addField("Primary Concern", data.primaryConcern);
-      addField("Family Members", data.familyMembers.toString());
-      addField("Preferred Language", data.preferredLanguage);
-      addField("Message", data.message);
-
       await saveFormSubmission({
         formType: "family",
         formName: "Family Counselling Form",
@@ -61,9 +34,19 @@ export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
         data,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      await submitToFormSubmit({
+        _subject: formSubjects.family,
+        "Form Name": "Family Counselling Form",
+        Name: data.name,
+        "Mobile Number": data.phone,
+        "Email Address": data.email || "",
+        "Primary Concern": data.primaryConcern,
+        "Family Members": data.familyMembers.toString(),
+        "Preferred Language": data.preferredLanguage,
+        Message: data.message,
+      });
 
+      setSubmittedName(data.name);
       setSubmitStatus("success");
       onSuccess?.();
     } catch {
@@ -73,9 +56,10 @@ export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
 
   if (submitStatus === "success") {
     return (
-      <div className="text-center py-12">
+      <div id="family-form-success" role="status" aria-live="polite" tabIndex={-1} className="text-center py-12 outline-none">
         <CheckCircle className="w-16 h-16 text-success mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-primary mb-3">Thank You!</h3>
+        <h3 className="text-xl font-bold text-primary mb-2">Thank you, {submittedName}!</h3>
+        <p className="font-medium text-foreground mb-3">Your family counselling enquiry was submitted successfully.</p>
         <p className="text-muted">{successMessages.family}</p>
       </div>
     );
