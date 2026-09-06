@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -16,6 +17,7 @@ import {
   HeartHandshake,
   MessageSquare,
   IndianRupee,
+  Inbox,
   ListTodo,
   Package,
   NotebookTabs,
@@ -29,6 +31,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
+import type { FormSubmissionRecord } from "@/lib/form-submission-types";
 import type {
   CentreAdminStore,
   CentreCollection,
@@ -130,8 +133,8 @@ const configs: Record<string, CollectionConfig> = {
     path: "/admin/leads",
     title: "CRM pipeline",
     singular: "Lead",
-    subtitle: "Walk-ins, calls, referrals and offline counselling enquiries",
-    description: "Track non-website enquiries from first contact through consultation, conversion or closure.",
+    subtitle: "Website, walk-in, call, referral and centre enquiries in one pipeline",
+    description: "Track website and offline enquiries from first contact through follow-up, booking, conversion or closure.",
     columns: [
       { key: "leadCode", label: "Lead ID" },
       { key: "fullName", label: "Lead" },
@@ -145,7 +148,7 @@ const configs: Record<string, CollectionConfig> = {
       { key: "fullName", label: "Full name", required: true },
       { key: "phone", label: "Phone", type: "tel", required: true },
       { key: "email", label: "Email", type: "email" },
-      { key: "source", label: "Lead source", type: "select", options: ["Walk-in", "Phone", "WhatsApp", "Referral", "Google", "Social media", "Event / workshop", "Other"] },
+      { key: "source", label: "Lead source", type: "select", options: ["Website", "Walk-in", "Phone", "WhatsApp", "Referral", "Google", "Social media", "Event / workshop", "Other"] },
       { key: "enquiryFor", label: "Enquiry for", type: "select", options: ["Individual counselling", "Student counselling", "Career counselling", "Family counselling", "Couple counselling", "Parent counselling", "Workshop / training", "Assessment", "Other"] },
       { key: "preferredMode", label: "Preferred mode", type: "select", options: ["In-person", "Online", "Phone", "Flexible"] },
       { key: "assignedTo", label: "Assigned to" },
@@ -155,6 +158,7 @@ const configs: Record<string, CollectionConfig> = {
       { key: "estimatedValue", label: "Estimated value (₹)", type: "number" },
       { key: "city", label: "City" },
       { key: "convertedClientId", label: "Converted client ID" },
+      { key: "sourceSubmissionId", label: "Website submission ID" },
       { key: "notes", label: "Lead notes", type: "textarea", wide: true },
     ],
   },
@@ -893,7 +897,7 @@ function CollectionView({ config, store, reload }: { config: CollectionConfig; s
   );
 }
 
-function TodayDesk({ store }: { store: CentreAdminStore }) {
+function TodayDesk({ store, websiteRecords }: { store: CentreAdminStore; websiteRecords: FormSubmissionRecord[] }) {
   const today = localDateKey();
   const openAppointments = [...store.appointments].filter((item) => item.date === today && !["Cancelled"].includes(item.status)).sort((a, b) => (a.time || "").localeCompare(b.time || ""));
   const todaySessions = [...store.sessions].filter((item) => item.sessionDate === today && item.status !== "Cancelled").sort((a, b) => (a.sessionTime || "").localeCompare(b.sessionTime || ""));
@@ -902,7 +906,11 @@ function TodayDesk({ store }: { store: CentreAdminStore }) {
   const duePlans = [...store.carePlans].filter((item) => item.status === "Active" && item.nextDueDate && item.nextDueDate <= today && Number(item.totalFee || 0) > Number(item.amountPaid || 0)).sort((a, b) => a.nextDueDate.localeCompare(b.nextDueDate));
   const lowStock = store.inventory.filter((item) => item.status !== "Discontinued" && Number(item.quantity || 0) <= Number(item.minimumStock || 0));
   const newLeads = store.leads.filter((item) => item.stage === "New");
-  const attention = dueFollowUps.length + dueTasks.length + duePlans.length + lowStock.length;
+  const websiteNew = websiteRecords.filter((item) => item.formType !== "contact" && item.status === "new").length;
+  const websiteFollowUp = websiteRecords.filter((item) => item.formType !== "contact" && item.status === "contacted").length;
+  const websiteScheduled = websiteRecords.filter((item) => item.formType !== "contact" && item.status === "scheduled").length;
+  const websiteNeedsAction = websiteNew + websiteFollowUp;
+  const attention = websiteNeedsAction + dueFollowUps.length + dueTasks.length + duePlans.length + lowStock.length;
 
   const queueCard = (title: string, count: number, note: string, Icon: typeof Clock3) => <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,.03)] sm:p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold text-slate-500">{title}</p><div className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-900">{count}</div></div><div className="grid h-10 w-10 place-items-center rounded-xl bg-[#173f45]/[0.07] text-[#173f45]"><Icon className="h-4 w-4" /></div></div><p className="mt-4 text-[11px] text-slate-400">{note}</p></div>;
 
@@ -912,17 +920,20 @@ function TodayDesk({ store }: { store: CentreAdminStore }) {
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e3c08d]"><Sparkles className="h-3.5 w-3.5" /> Daily command centre</div><h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">Good morning. Here is what needs attention today.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/65">A single operating desk for the front office, counsellors and centre administrator — calculated live from your JSON records.</p></div><div className="rounded-2xl border border-white/10 bg-white/[0.08] px-5 py-4"><div className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/45">Attention queue</div><div className="mt-1 text-3xl font-semibold">{attention}</div><div className="mt-1 text-xs text-white/55">due / overdue centre actions</div></div></div>
     </div>
 
-    <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-5">
+      {queueCard("Website actions", websiteNeedsAction, `${websiteNew} new • ${websiteFollowUp} follow-up • ${websiteScheduled} booked`, Inbox)}
       {queueCard("Today's schedule", openAppointments.length + todaySessions.length, `${openAppointments.length} appointments • ${todaySessions.length} counselling sessions`, CalendarCheck2)}
       {queueCard("Follow-ups due", dueFollowUps.length, "Client calls and follow-up actions", Clock3)}
-      {queueCard("New offline leads", newLeads.length, "CRM enquiries awaiting first action", UsersRound)}
+      {queueCard("New CRM leads", newLeads.length, "CRM enquiries awaiting first action", UsersRound)}
       {queueCard("Fees due", duePlans.length, "Active plans with due balances", Wallet)}
     </div>
 
     <div className="mt-5 grid gap-5 xl:grid-cols-[1.15fr_.85fr]">
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white"><div className="flex items-center justify-between border-b border-slate-100 p-5"><div><h3 className="text-sm font-bold text-slate-900">Today's schedule</h3><p className="mt-1 text-xs text-slate-400">Appointments and counselling sessions in time order</p></div><CalendarRange className="h-5 w-5 text-[#5d8079]" /></div>{openAppointments.length + todaySessions.length === 0 ? <div className="p-10 text-center text-sm text-slate-400">Nothing is scheduled for today.</div> : <div className="divide-y divide-slate-100">{[...openAppointments.map((item) => ({ id: item.id, time: item.time, name: item.clientName, label: item.purpose || "Appointment", owner: item.counsellor, status: item.status, kind: "Appointment" })), ...todaySessions.map((item) => ({ id: item.id, time: item.sessionTime, name: item.clientName, label: item.sessionType || "Counselling", owner: item.counsellor, status: item.status, kind: "Session" }))].sort((a,b) => (a.time || "").localeCompare(b.time || "")).map((item) => <div key={`${item.kind}-${item.id}`} className="flex items-center gap-4 p-4 sm:px-5"><div className="w-16 shrink-0 text-sm font-bold text-[#173f45]">{item.time || "—"}</div><div className="min-w-0 flex-1"><div className="truncate text-sm font-semibold text-slate-800">{item.name || "Client"}</div><div className="mt-1 truncate text-xs text-slate-400">{item.kind} • {item.label} • {item.owner || "Unassigned"}</div></div><span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusPill(item.status)}`}>{item.status || "Scheduled"}</span></div>)}</div>}</section>
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white"><div className="flex items-center justify-between border-b border-slate-100 p-5"><div><h3 className="text-sm font-bold text-slate-900">Urgent work queue</h3><p className="mt-1 text-xs text-slate-400">Overdue follow-ups, tasks, fees and stock</p></div><AlertTriangle className="h-5 w-5 text-amber-600" /></div><div className="divide-y divide-slate-100">
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white"><div className="flex items-center justify-between border-b border-slate-100 p-5"><div><h3 className="text-sm font-bold text-slate-900">Urgent work queue</h3><p className="mt-1 text-xs text-slate-400">Website pipeline actions plus overdue follow-ups, tasks, fees and stock</p></div><AlertTriangle className="h-5 w-5 text-amber-600" /></div><div className="divide-y divide-slate-100">
+        {websiteNew > 0 && <Link href="/admin/new" className="flex items-center justify-between gap-4 bg-amber-50/60 p-4 transition hover:bg-amber-50 sm:px-5"><div><div className="text-sm font-semibold text-slate-800">{websiteNew} new website service {websiteNew === 1 ? "request" : "requests"}</div><p className="mt-1 text-xs text-slate-500">Already in CRM — respond and move each request to its next stage from the enquiry flow.</p></div><ChevronRight className="h-4 w-4 shrink-0 text-amber-700" /></Link>}
+        {websiteFollowUp > 0 && <Link href="/admin/follow-up" className="flex items-center justify-between gap-4 bg-sky-50/60 p-4 transition hover:bg-sky-50 sm:px-5"><div><div className="text-sm font-semibold text-slate-800">{websiteFollowUp} website {websiteFollowUp === 1 ? "request needs" : "requests need"} follow-up</div><p className="mt-1 text-xs text-slate-500">Continue the same CRM record; no repeated form or duplicate client entry is required.</p></div><ChevronRight className="h-4 w-4 shrink-0 text-sky-700" /></Link>}
         {dueFollowUps.slice(0,3).map((item) => <div key={item.id} className="p-4 sm:px-5"><div className="flex items-center justify-between gap-3"><div className="truncate text-sm font-semibold text-slate-800">{item.clientName || item.purpose}</div><span className="rounded-full bg-amber-50 px-2 py-1 text-[9px] font-bold text-amber-700">FOLLOW-UP</span></div><p className="mt-1 text-xs text-slate-400">Due {formatDate(item.dueDate)} • {item.assignedTo || "Unassigned"}</p></div>)}
         {dueTasks.slice(0,3).map((item) => <div key={item.id} className="p-4 sm:px-5"><div className="flex items-center justify-between gap-3"><div className="truncate text-sm font-semibold text-slate-800">{item.title}</div><span className="rounded-full bg-sky-50 px-2 py-1 text-[9px] font-bold text-sky-700">TASK</span></div><p className="mt-1 text-xs text-slate-400">Due {formatDate(item.dueDate)} • {item.assignedTo || "Unassigned"}</p></div>)}
         {duePlans.slice(0,3).map((item) => <div key={item.id} className="p-4 sm:px-5"><div className="flex items-center justify-between gap-3"><div className="truncate text-sm font-semibold text-slate-800">{item.clientName || item.planCode}</div><span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-700">FEE DUE</span></div><p className="mt-1 text-xs text-slate-400">{money(Math.max(0, Number(item.totalFee || 0) - Number(item.amountPaid || 0)))} outstanding • due {formatDate(item.nextDueDate)}</p></div>)}
@@ -958,7 +969,7 @@ function FinanceCommand({ store }: { store: CentreAdminStore }) {
   </>;
 }
 
-function Overview({ store }: { store: CentreAdminStore }) {
+function Overview({ store, websiteRecords }: { store: CentreAdminStore; websiteRecords: FormSubmissionRecord[] }) {
   const today = localDateKey();
   const month = today.slice(0, 7);
   const activeClients = store.clients.filter((item) => !["Completed", "Closed"].includes(item.status)).length;
@@ -971,12 +982,18 @@ function Overview({ store }: { store: CentreAdminStore }) {
   const expenses = store.expenses.filter((item) => item.expenseDate.startsWith(month)).reduce((sum, item) => sum + Number(item.amount || 0), 0);
   const upcoming = [...store.appointments].filter((item) => item.date >= today && !["Cancelled", "Completed"].includes(item.status)).sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)).slice(0, 6);
   const dueFollowUps = [...store.followUps].filter((item) => item.dueDate <= today && !["Completed", "Cancelled"].includes(item.status)).sort((a, b) => a.dueDate.localeCompare(b.dueDate)).slice(0, 6);
+  const websiteCare = websiteRecords.filter((item) => item.formType !== "contact");
+  const websiteWaiting = websiteCare.filter((item) => ["new", "contacted"].includes(item.status)).length;
+  const websiteScheduled = websiteCare.filter((item) => item.status === "scheduled").length;
+  const contactOpen = websiteRecords.filter((item) => item.formType === "contact" && item.status !== "closed").length;
 
   const cards = [
+    { label: "Website actions", value: websiteWaiting, note: "New / contacted service requests", icon: Inbox },
     { label: "Active clients", value: activeClients, note: `${store.clients.length} total client records`, icon: UsersRound },
     { label: "Today's appointments", value: todayAppointments, note: "Open calendar items", icon: CalendarCheck2 },
     { label: "Pending follow-ups", value: pendingFollowUps, note: "Calls and follow-up work", icon: Clock3 },
-    { label: "Open CRM leads", value: openLeads, note: `${store.leads.length} offline enquiries total`, icon: TrendingUp },
+    { label: "Contact inbox", value: contactOpen, note: "Separate website contact flow", icon: MessageSquare },
+    { label: "Open CRM leads", value: openLeads, note: `${store.leads.length} website + offline enquiries total`, icon: TrendingUp },
     { label: "Active care plans", value: activePlans, note: `${money(outstandingPlans)} outstanding`, icon: Package },
     { label: "Revenue this month", value: money(revenue), note: `Expenses ${money(expenses)}`, icon: IndianRupee },
   ];
@@ -985,7 +1002,9 @@ function Overview({ store }: { store: CentreAdminStore }) {
     <>
       <div><div className="inline-flex items-center gap-2 rounded-full border border-[#5d8079]/15 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#5d8079]"><HeartHandshake className="h-3.5 w-3.5" /> Chetana centre workspace</div><h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-4xl">Run the centre from one calm workspace.</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">Client profiles, CRM leads, counselling notes, care plans, communications, calendar, finance, documents, inventory, staff and centre tasks are all maintained in private editable JSON storage.</p></div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">{cards.map((item) => <div key={item.label} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,.03)] sm:p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold text-slate-500">{item.label}</p><div className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-3xl">{item.value}</div></div><div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#173f45]/[0.07] text-[#173f45]"><item.icon className="h-4 w-4" /></div></div><p className="mt-4 text-[11px] text-slate-400">{item.note}</p></div>)}</div>
+      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 xl:grid-cols-8">{cards.map((item) => <div key={item.label} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,.03)] sm:p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold text-slate-500">{item.label}</p><div className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-3xl">{item.value}</div></div><div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#173f45]/[0.07] text-[#173f45]"><item.icon className="h-4 w-4" /></div></div><p className="mt-4 text-[11px] text-slate-400">{item.note}</p></div>)}</div>
+
+      <section className="mt-6 rounded-2xl border border-[#5d8079]/20 bg-white p-5 shadow-[0_12px_36px_rgba(15,23,42,.035)] sm:p-6"><div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div><div className="flex items-center gap-2 text-sm font-bold text-slate-900"><Sparkles className="h-4 w-4 text-[#5d8079]" /> Continuous website → centre flow</div><p className="mt-2 max-w-3xl text-xs leading-5 text-slate-500">No second form is required at any stage. Every service-form submission starts one CRM record automatically; New, Follow-up, Booked and Closed update that same flow. Booking creates or reuses the client and calendar item, while Contact Form messages stay in their own inbox.</p></div><Link href="/admin" className="inline-flex h-9 w-fit shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-600 hover:bg-slate-50">Open enquiry flow <ChevronRight className="h-4 w-4" /></Link></div><div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5"><Link href="/admin/new" className="rounded-xl bg-amber-50 p-4 transition hover:bg-amber-100/70"><div className="text-[10px] font-bold uppercase tracking-[0.13em] text-amber-700">New</div><div className="mt-1 text-2xl font-semibold text-slate-900">{websiteCare.filter((item) => item.status === "new").length}</div><div className="mt-1 text-[11px] text-slate-500">CRM live • first response</div></Link><Link href="/admin/follow-up" className="rounded-xl bg-sky-50 p-4 transition hover:bg-sky-100/70"><div className="text-[10px] font-bold uppercase tracking-[0.13em] text-sky-700">Follow-up</div><div className="mt-1 text-2xl font-semibold text-slate-900">{websiteCare.filter((item) => item.status === "contacted").length}</div><div className="mt-1 text-[11px] text-slate-500">Same lead • next action</div></Link><Link href="/admin/scheduled" className="rounded-xl bg-emerald-50 p-4 transition hover:bg-emerald-100/70"><div className="text-[10px] font-bold uppercase tracking-[0.13em] text-emerald-700">Booked</div><div className="mt-1 text-2xl font-semibold text-slate-900">{websiteScheduled}</div><div className="mt-1 text-[11px] text-slate-500">Client + calendar linked</div></Link><Link href="/admin/completed" className="rounded-xl bg-[#173f45]/[0.06] p-4 transition hover:bg-[#173f45]/[0.1]"><div className="text-[10px] font-bold uppercase tracking-[0.13em] text-[#173f45]">Closed</div><div className="mt-1 text-2xl font-semibold text-slate-900">{websiteCare.filter((item) => item.status === "closed").length}</div><div className="mt-1 text-[11px] text-slate-500">History retained</div></Link><Link href="/admin/contact-inbox" className="rounded-xl bg-violet-50 p-4 transition hover:bg-violet-100/70"><div className="text-[10px] font-bold uppercase tracking-[0.13em] text-violet-700">Contact inbox</div><div className="mt-1 text-2xl font-semibold text-slate-900">{contactOpen}</div><div className="mt-1 text-[11px] text-slate-500">Separate message workflow</div></Link></div></section>
 
       <div className="mt-6 grid gap-5 xl:grid-cols-2">
         <section className="rounded-2xl border border-slate-200/80 bg-white shadow-[0_12px_36px_rgba(15,23,42,.035)]"><div className="flex items-center justify-between border-b border-slate-100 p-5"><div><h3 className="text-sm font-bold text-slate-900">Upcoming appointments</h3><p className="mt-1 text-xs text-slate-400">Next scheduled client visits</p></div><CalendarCheck2 className="h-5 w-5 text-[#5d8079]" /></div>{upcoming.length ? <div className="divide-y divide-slate-100">{upcoming.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 p-4 sm:px-5"><div className="min-w-0"><div className="truncate text-sm font-semibold text-slate-800">{item.clientName || "Client"}</div><div className="mt-1 text-xs text-slate-400">{formatDate(item.date)} • {item.time || "Time not set"} • {item.counsellor || "Unassigned"}</div></div><span className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold ${statusPill(item.status)}`}>{item.status || "Scheduled"}</span></div>)}</div> : <div className="p-8 text-center text-sm text-slate-400">No upcoming appointments.</div>}</section>
@@ -1018,7 +1037,7 @@ function Reports({ store }: { store: CentreAdminStore }) {
     ["Month expenses", money(expenses), "Recorded expenses this month"],
     ["Month net", money(revenue - expenses), "Revenue minus expenses"],
     ["Pending / partial fees", money(pendingPayments), "Based on payment records"],
-    ["CRM lead conversion", `${conversionRate}%`, `${convertedLeads} of ${store.leads.length} offline leads converted`],
+    ["CRM lead conversion", `${conversionRate}%`, `${convertedLeads} of ${store.leads.length} CRM leads converted`],
     ["Active care plans", store.carePlans.filter((item) => item.status === "Active").length, `${money(planOutstanding)} outstanding`],
     ["Client communications", store.communications.length, "Calls, WhatsApp, email and front desk interactions"],
     ["Low-stock items", lowStock, "Inventory at or below minimum"],
@@ -1056,7 +1075,7 @@ function ArchiveView({ store, reload }: { store: CentreAdminStore; reload: () =>
   return <><div><div className="inline-flex items-center gap-2 rounded-full border border-[#5d8079]/15 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#5d8079]"><DatabaseBackup className="h-3.5 w-3.5" /> No-loss archive</div><h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-4xl">Archived centre records</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">Archiving removes a record from active work lists but keeps its complete JSON data here. Any archived record can be restored.</p></div><section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">{store.archives.length === 0 ? <div className="grid min-h-64 place-items-center p-8 text-center"><div><DatabaseBackup className="mx-auto h-7 w-7 text-slate-300"/><h3 className="mt-3 font-semibold text-slate-700">Archive is empty</h3><p className="mt-1 text-sm text-slate-400">Nothing has been archived from centre records.</p></div></div> : <div className="divide-y divide-slate-100">{[...store.archives].reverse().map((item) => { const record = item.record as unknown as Record<string, unknown>; const label = textValue(record.fullName || record.clientName || record.documentName || record.itemName || record.name || record.title || record.description || record.leadCode || record.planCode || record.receiptNo || record.staffCode || record.id); return <div key={item.archiveId} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"><div><div className="text-sm font-semibold text-slate-800">{label}</div><div className="mt-1 text-xs capitalize text-slate-400">{item.collection} • archived {formatDate(item.archivedAt, true)}</div></div><button onClick={() => restore(item.archiveId)} disabled={restoring === item.archiveId} className="h-9 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-50">{restoring === item.archiveId ? "Restoring…" : "Restore record"}</button></div>; })}</div>}</section></>;
 }
 
-export default function CentreManagement({ pathname, onUnauthorized }: { pathname: string; onUnauthorized: () => void }) {
+export default function CentreManagement({ pathname, onUnauthorized, websiteRecords }: { pathname: string; onUnauthorized: () => void; websiteRecords: FormSubmissionRecord[] }) {
   const [store, setStore] = useState<CentreAdminStore>(EMPTY_STORE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -1083,5 +1102,5 @@ export default function CentreManagement({ pathname, onUnauthorized }: { pathnam
   if (error) return <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{error}<button onClick={load} className="ml-3 font-bold underline">Try again</button></div>;
 
   const key = pathname.split("/").pop() || "centre";
-  return <div className="px-4 py-6 sm:px-7 lg:px-9 lg:py-8">{pathname === "/admin/centre" ? <Overview store={store} /> : pathname === "/admin/today" ? <TodayDesk store={store} /> : pathname === "/admin/calendar" ? <CalendarView store={store} /> : pathname === "/admin/finance" ? <FinanceCommand store={store} /> : pathname === "/admin/reports" ? <Reports store={store} /> : pathname === "/admin/archive" ? <ArchiveView store={store} reload={load} /> : pathname === "/admin/data" ? <DataBackup store={store} /> : configs[key] ? <CollectionView config={configs[key]} store={store} reload={load} /> : <Overview store={store} />}</div>;
+  return <div className="px-4 py-6 sm:px-7 lg:px-9 lg:py-8">{pathname === "/admin/centre" ? <Overview store={store} websiteRecords={websiteRecords} /> : pathname === "/admin/today" ? <TodayDesk store={store} websiteRecords={websiteRecords} /> : pathname === "/admin/calendar" ? <CalendarView store={store} /> : pathname === "/admin/finance" ? <FinanceCommand store={store} /> : pathname === "/admin/reports" ? <Reports store={store} /> : pathname === "/admin/archive" ? <ArchiveView store={store} reload={load} /> : pathname === "/admin/data" ? <DataBackup store={store} /> : configs[key] ? <CollectionView config={configs[key]} store={store} reload={load} /> : <Overview store={store} websiteRecords={websiteRecords} />}</div>;
 }

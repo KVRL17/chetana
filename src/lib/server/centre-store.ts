@@ -202,12 +202,10 @@ export async function createCentreRecord(collection: CentreCollection, input: un
   return queueMutation(async () => {
     const store = await readCentreStore();
     const records = store[collection] as CentreRecord[];
-    if (collection === "clients") {
-      const sourceSubmissionId = String(cleaned.sourceSubmissionId || "");
-      if (sourceSubmissionId) {
-        const existing = store.clients.find((item) => item.sourceSubmissionId === sourceSubmissionId);
-        if (existing) return existing;
-      }
+    const sourceSubmissionId = String(cleaned.sourceSubmissionId || "");
+    if (sourceSubmissionId && ["clients", "leads", "appointments", "followUps", "communications"].includes(collection)) {
+      const existing = records.find((item) => String((item as unknown as Record<string, unknown>).sourceSubmissionId || "") === sourceSubmissionId);
+      if (existing) return existing;
     }
     const now = new Date().toISOString();
     const record: Record<string, unknown> = { ...cleaned, id: randomUUID(), createdAt: now, updatedAt: now };

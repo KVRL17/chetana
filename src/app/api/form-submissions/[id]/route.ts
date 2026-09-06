@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/server/admin-auth";
 import { updateSubmission } from "@/lib/server/form-store";
+import { syncSubmissionToCentre } from "@/lib/server/submission-centre-sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,11 +14,18 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
   try {
     const { id } = await context.params;
     const body = await request.json();
-    const updated = await updateSubmission(id, body);
+    let updated = await updateSubmission(id, body);
     if (!updated) return NextResponse.json({ error: "Submission not found." }, { status: 404 });
+
+    if (updated.formType !== "contact") {
+      const workflow = await syncSubmissionToCentre(updated);
+      if (workflow) updated = await updateSubmission(id, { workflow }) || updated;
+    }
+
     return NextResponse.json({ ok: true, submission: updated });
   } catch (error) {
     console.error("Failed to update submission", error);
-    return NextResponse.json({ error: "Unable to update submission." }, { status: 400 });
+    const message = error instanceof Error ? error.message : "Unable to update submission.";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-06T01:51:46.462Z",
+  "updatedAt": "2026-09-06T06:02:51.455Z",
   "clients": [
     {
       "fullName": "kusuma",
@@ -33,11 +33,83 @@
       "createdAt": "2026-09-06T01:50:34.647Z",
       "updatedAt": "2026-09-06T01:51:46.462Z",
       "clientCode": "CHT-0001"
+    },
+    {
+      "fullName": "kusuma pentakota",
+      "phone": "9876543212",
+      "alternatePhone": "",
+      "email": "pkusuma4362@gmail.com",
+      "dateOfBirth": "",
+      "age": "20",
+      "gender": "male",
+      "occupationOrClass": "",
+      "schoolCollegeOrCompany": "",
+      "parentGuardianName": "",
+      "relationship": "",
+      "city": "asdfg",
+      "address": "",
+      "emergencyContact": "",
+      "counsellingFor": "individual-counselling",
+      "primaryConcern": "zxcvbqwert",
+      "preferredLanguage": "english",
+      "preferredSessionType": "in-person",
+      "referralSource": "Website — Appointment Form",
+      "assignedCounsellor": "",
+      "status": "Active",
+      "consent": "Received",
+      "tags": "appointment",
+      "documents": "",
+      "notes": "Continuous website intake 969d08f3.",
+      "sourceSubmissionId": "969d08f3-0aad-4d51-b7aa-320ef2a47428",
+      "id": "04b87072-deaa-48ce-aeee-c0f40bcf375a",
+      "createdAt": "2026-09-06T02:54:35.677Z",
+      "updatedAt": "2026-09-06T06:02:51.407Z",
+      "clientCode": "CHT-0002"
     }
   ],
-  "leads": [],
+  "leads": [
+    {
+      "fullName": "kusuma pentakota",
+      "phone": "9876543212",
+      "email": "pkusuma4362@gmail.com",
+      "source": "Website",
+      "enquiryFor": "individual-counselling",
+      "preferredMode": "in-person",
+      "assignedTo": "",
+      "stage": "Consultation booked",
+      "priority": "Normal",
+      "nextFollowUp": "2026-09-06",
+      "estimatedValue": 0,
+      "city": "asdfg",
+      "notes": "Website intake • Appointment Form • received 2026-09-06T02:53:20.926Z • zxcvbqwert",
+      "convertedClientId": "",
+      "sourceSubmissionId": "969d08f3-0aad-4d51-b7aa-320ef2a47428",
+      "id": "bcd44c2b-6971-4be8-b2b7-7590f7226923",
+      "createdAt": "2026-09-06T06:02:51.429Z",
+      "updatedAt": "2026-09-06T06:02:51.429Z",
+      "leadCode": "LEAD-0001"
+    }
+  ],
   "sessions": [],
-  "appointments": [],
+  "appointments": [
+    {
+      "clientId": "04b87072-deaa-48ce-aeee-c0f40bcf375a",
+      "date": "2026-09-06",
+      "time": "13:28",
+      "purpose": "zxcvbqwert",
+      "counsellor": "",
+      "mode": "In-person",
+      "location": "asdfg",
+      "status": "Scheduled",
+      "reminderStatus": "Confirmed by client",
+      "notes": "Created automatically from Appointment Form. Website enquiry ID: 969d08f3-0aad-4d51-b7aa-320ef2a47428.",
+      "clientName": "kusuma pentakota",
+      "id": "5bfea385-7b26-4019-aa03-97fc9c3b638e",
+      "createdAt": "2026-09-06T02:56:17.618Z",
+      "updatedAt": "2026-09-06T06:02:51.455Z",
+      "sourceSubmissionId": "969d08f3-0aad-4d51-b7aa-320ef2a47428"
+    }
+  ],
   "followUps": [],
   "carePlans": [],
   "communications": [],
@@ -65,6 +137,54 @@
       "recordId": "82217903-f371-4d72-80be-dc23814cc9a7",
       "label": "kusuma",
       "at": "2026-09-06T01:51:46.462Z"
+    },
+    {
+      "id": "f48a204f-a0f3-4255-85d4-bc3b1738d3a9",
+      "action": "created",
+      "collection": "clients",
+      "recordId": "04b87072-deaa-48ce-aeee-c0f40bcf375a",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T02:54:35.678Z"
+    },
+    {
+      "id": "04f63c52-7400-4f60-b36e-afc9ae1c5c3e",
+      "action": "updated",
+      "collection": "clients",
+      "recordId": "04b87072-deaa-48ce-aeee-c0f40bcf375a",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T02:55:25.576Z"
+    },
+    {
+      "id": "b2636583-25e3-4961-86c5-fb08f3ce3f29",
+      "action": "created",
+      "collection": "appointments",
+      "recordId": "5bfea385-7b26-4019-aa03-97fc9c3b638e",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T02:56:17.618Z"
+    },
+    {
+      "id": "baf8879c-16c0-47a6-80f8-5c420b6d300b",
+      "action": "updated",
+      "collection": "clients",
+      "recordId": "04b87072-deaa-48ce-aeee-c0f40bcf375a",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T06:02:51.408Z"
+    },
+    {
+      "id": "6f6b135e-d8c0-4141-920b-9fa1cbea1d82",
+      "action": "created",
+      "collection": "leads",
+      "recordId": "bcd44c2b-6971-4be8-b2b7-7590f7226923",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T06:02:51.429Z"
+    },
+    {
+      "id": "c232af2b-d303-47a9-ba52-ecf6a07478e0",
+      "action": "updated",
+      "collection": "appointments",
+      "recordId": "5bfea385-7b26-4019-aa03-97fc9c3b638e",
+      "label": "kusuma pentakota",
+      "at": "2026-09-06T06:02:51.455Z"
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
-import { formTypeLabels, type FormSubmissionRecord, type FormSubmissionStore, type FormType, type SubmissionStatus } from "@/lib/form-submission-types";
+import { formTypeLabels, type FormSubmissionRecord, type FormSubmissionStore, type FormType, type SubmissionStatus, type SubmissionWorkflow } from "@/lib/form-submission-types";
 
 const EMPTY_STORE: FormSubmissionStore = { version: 1, updatedAt: null, submissions: [] };
 let mutationQueue: Promise<unknown> = Promise.resolve();
@@ -112,6 +112,25 @@ function cleanData(input: unknown) {
   return Object.fromEntries(entries.map(([key, value]) => [key.slice(0, 100), cleanScalar(value)]));
 }
 
+function cleanWorkflow(input: unknown): SubmissionWorkflow {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return {};
+  const source = input as Record<string, unknown>;
+  const text = (key: string, max = 200) => typeof source[key] === "string" ? String(source[key]).slice(0, max) : undefined;
+  return {
+    centreLeadId: text("centreLeadId", 120),
+    centreLeadCode: text("centreLeadCode", 80),
+    scheduledDate: text("scheduledDate", 20),
+    scheduledTime: text("scheduledTime", 20),
+    scheduledMode: text("scheduledMode", 80),
+    nextActionDate: text("nextActionDate", 20),
+    centreClientId: text("centreClientId", 120),
+    centreClientCode: text("centreClientCode", 80),
+    appointmentId: text("appointmentId", 120),
+    promotedAt: text("promotedAt", 40),
+    contactNextActionDate: text("contactNextActionDate", 20),
+  };
+}
+
 export async function addSubmission(input: {
   formType: unknown;
   formName?: unknown;
@@ -158,7 +177,7 @@ export async function addSubmission(input: {
 
 const allowedStatuses: SubmissionStatus[] = ["new", "contacted", "scheduled", "closed"];
 
-export async function updateSubmission(id: string, patch: { status?: unknown; adminNotes?: unknown; data?: unknown }) {
+export async function updateSubmission(id: string, patch: { status?: unknown; adminNotes?: unknown; data?: unknown; workflow?: unknown }) {
   return queueMutation(async () => {
     const store = await readStore();
     const record = store.submissions.find((item) => item.id === id);
@@ -175,6 +194,7 @@ export async function updateSubmission(id: string, patch: { status?: unknown; ad
       record.adminNotes = patch.adminNotes.slice(0, 5000);
     }
     if (patch.data !== undefined) record.data = cleanData(patch.data);
+    if (patch.workflow !== undefined) record.workflow = { ...(record.workflow || {}), ...cleanWorkflow(patch.workflow) };
 
     const now = new Date().toISOString();
     record.updatedAt = now;

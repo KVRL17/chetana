@@ -70,6 +70,7 @@ export interface LeadRecord extends CentreRecordBase {
   city: string;
   notes: string;
   convertedClientId: string;
+  sourceSubmissionId?: string;
 }
 
 export interface SessionRecord extends CentreRecordBase {
@@ -103,6 +104,7 @@ export interface AppointmentRecord extends CentreRecordBase {
   status: string;
   reminderStatus: string;
   notes: string;
+  sourceSubmissionId?: string;
 }
 
 export interface FollowUpRecord extends CentreRecordBase {
@@ -117,6 +119,7 @@ export interface FollowUpRecord extends CentreRecordBase {
   status: string;
   outcome: string;
   notes: string;
+  sourceSubmissionId?: string;
 }
 
 export interface CarePlanRecord extends CentreRecordBase {
