@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-06T01:51:46.462Z",
+  "clients": [
+    {
+      "fullName": "kusuma",
+      "phone": "9876543212",
+      "alternatePhone": "",
+      "email": "pkusuma4362@gmail.com",
+      "dateOfBirth": "",
+      "age": "",
+      "gender": "",
+      "occupationOrClass": "",
+      "schoolCollegeOrCompany": "",
+      "parentGuardianName": "",
+      "relationship": "",
+      "city": "",
+      "address": "",
+      "emergencyContact": "",
+      "counsellingFor": "Contact",
+      "primaryConcern": "asdfgzxcvb",
+      "preferredLanguage": "",
+      "preferredSessionType": "",
+      "referralSource": "Website — Contact Form",
+      "assignedCounsellor": "",
+      "status": "Active",
+      "consent": "Received",
+      "tags": "contact",
+      "documents": "",
+      "notes": "Created from website enquiry received 06 Sept 2026, 07:19 am.",
+      "sourceSubmissionId": "1183cb81-5837-48b1-8ea8-afe1eb628b23",
+      "id": "82217903-f371-4d72-80be-dc23814cc9a7",
+      "createdAt": "2026-09-06T01:50:34.647Z",
+      "updatedAt": "2026-09-06T01:51:46.462Z",
+      "clientCode": "CHT-0001"
+    }
+  ],
+  "leads": [],
+  "sessions": [],
+  "appointments": [],
+  "followUps": [],
+  "carePlans": [],
+  "communications": [],
+  "documents": [],
+  "services": [],
+  "payments": [],
+  "expenses": [],
+  "inventory": [],
+  "staff": [],
+  "tasks": [],
+  "archives": [],
+  "activity": [
+    {
+      "id": "deb2492b-0d95-4320-9ba2-cd48f081cd73",
+      "action": "created",
+      "collection": "clients",
+      "recordId": "82217903-f371-4d72-80be-dc23814cc9a7",
+      "label": "kusuma",
+      "at": "2026-09-06T01:50:34.647Z"
+    },
+    {
+      "id": "3a3991a8-e383-420e-9869-f08a472eb126",
+      "action": "updated",
+      "collection": "clients",
+      "recordId": "82217903-f371-4d72-80be-dc23814cc9a7",
+      "label": "kusuma",
+      "at": "2026-09-06T01:51:46.462Z"
+    }
+  ]
+}

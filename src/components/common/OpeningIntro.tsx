@@ -2,15 +2,19 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import logo from "../../../logo-green.png";
 
 type IntroPhase = "playing" | "leaving";
 
 export default function OpeningIntro() {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
   const [phase, setPhase] = useState<IntroPhase>("playing");
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    if (isAdmin) return;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const previousOverflow = document.body.style.overflow;
     const previousOverscroll = document.body.style.overscrollBehavior;
@@ -41,16 +45,17 @@ export default function OpeningIntro() {
       document.body.style.overflow = previousOverflow;
       document.body.style.overscrollBehavior = previousOverscroll;
     };
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
+    if (isAdmin) return;
     if (!visible) {
       document.body.style.overflow = "";
       document.body.style.overscrollBehavior = "";
     }
-  }, [visible]);
+  }, [visible, isAdmin]);
 
-  if (!visible) return null;
+  if (isAdmin || !visible) return null;
 
   return (
     <div

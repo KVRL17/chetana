@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { workshopSchema } from "@/schemas/workshopSchema";
 import type { WorkshopFormValues } from "@/schemas/workshopSchema";
 import { cn, getTodayDate } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, Building, Users, Calendar, MapPin, MessageSquare } from "lucide-react";
@@ -37,6 +38,7 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
       addField("_subject", formSubjects.workshop);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Workshop / Training Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -63,6 +65,13 @@ export const WorkshopForm = ({ onSuccess }: WorkshopFormProps) => {
       addField("Preferred Date", data.preferredDate || "");
       addField("Location", data.location);
       addField("Requirements", data.requirements);
+
+      await saveFormSubmission({
+        formType: "workshop",
+        formName: "Workshop / Training Form",
+        subject: formSubjects.workshop,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();

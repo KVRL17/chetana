@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { callbackSchema } from "@/schemas/callbackSchema";
 import type { CallbackFormValues } from "@/schemas/callbackSchema";
 import { cn } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { X, CheckCircle } from "lucide-react";
 import { useState } from "react";
@@ -37,6 +38,7 @@ export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
       addField("_subject", formSubjects.callback);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Callback Request Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -48,6 +50,13 @@ export const CallbackModal = ({ isOpen, onClose }: CallbackModalProps) => {
       addField("Phone Number", data.phone);
       addField("Interested Service", data.interestedService);
       addField("Preferred Callback Time", data.preferredCallbackTime);
+
+      await saveFormSubmission({
+        formType: "callback",
+        formName: "Callback Request Form",
+        subject: formSubjects.callback,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();

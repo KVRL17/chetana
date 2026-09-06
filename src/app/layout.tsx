@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { siteConfig } from "@/config/site";
 import OpeningIntro from "@/components/common/OpeningIntro";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import PendingSubmissionRecovery from "@/components/common/PendingSubmissionRecovery";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-heading", display: "swap" });
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         <ScrollToTop />
+        <PendingSubmissionRecovery />
         <OpeningIntro />
         {children}
       </body>

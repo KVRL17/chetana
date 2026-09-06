@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { contactSchema } from "@/schemas/contactSchema";
 import type { ContactFormValues } from "@/schemas/contactSchema";
 import { cn } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages, errorMessages, privacyNote } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, User, Mail, Phone, MessageSquare } from "lucide-react";
@@ -38,6 +39,7 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
       addField("_subject", formSubjects.contact);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Contact Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -61,6 +63,13 @@ export const ContactForm = ({ onSuccess }: ContactFormProps) => {
       };
       addField("Subject", subjectMap[data.subject] || "General Enquiry");
       addField("Message", data.message);
+
+      await saveFormSubmission({
+        formType: "contact",
+        formName: "Contact Form",
+        subject: formSubjects.contact,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();

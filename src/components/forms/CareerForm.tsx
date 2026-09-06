@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { careerCounsellingSchema } from "@/schemas/careerCounsellingSchema";
 import type { CareerCounsellingFormValues } from "@/schemas/careerCounsellingSchema";
 import { cn } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, XCircle, User, Phone, Mail, GraduationCap, MapPin, MessageSquare } from "lucide-react";
@@ -38,6 +39,7 @@ export const CareerForm = ({ onSuccess }: CareerFormProps) => {
       addField("_subject", formSubjects.career);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Career Counselling Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -57,6 +59,13 @@ export const CareerForm = ({ onSuccess }: CareerFormProps) => {
       addField("Career Concern", String(data.mainConcern || ""));
       addField("City", String(data.city || ""));
       addField("Message", String(data.message));
+
+      await saveFormSubmission({
+        formType: "career",
+        formName: "Career Counselling Form",
+        subject: formSubjects.career,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();

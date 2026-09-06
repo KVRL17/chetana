@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { familyCounsellingSchema } from "@/schemas/familyCounsellingSchema";
 import type { FamilyCounsellingFormValues } from "@/schemas/familyCounsellingSchema";
 import { cn } from "@/lib/utils";
+import { saveFormSubmission } from "@/lib/form-storage-client";
 import { siteConfig, formSubjects, successMessages } from "@/config/site";
 import { useState } from "react";
 import { CheckCircle, User, Phone, Mail, Users, MessageSquare, Globe } from "lucide-react";
@@ -37,6 +38,7 @@ export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
       addField("_subject", formSubjects.family);
       addField("_template", "table");
       addField("_captcha", "true");
+      addField("Form Name", "Family Counselling Form");
 
       const hp = document.createElement("input");
       hp.type = "text";
@@ -51,6 +53,13 @@ export const FamilyForm = ({ onSuccess }: FamilyFormProps) => {
       addField("Family Members", data.familyMembers.toString());
       addField("Preferred Language", data.preferredLanguage);
       addField("Message", data.message);
+
+      await saveFormSubmission({
+        formType: "family",
+        formName: "Family Counselling Form",
+        subject: formSubjects.family,
+        data,
+      });
 
       document.body.appendChild(form);
       form.submit();
